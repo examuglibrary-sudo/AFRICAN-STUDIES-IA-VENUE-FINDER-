@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edward Sam · African Studies Exam Venue Finder</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background: #f5f7fb;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 16px;
+    }
+    .card {
+      max-width: 860px;
+      width: 100%;
+      background: white;
+      border-radius: 32px;
+      box-shadow: 0 20px 40px -10px rgba(0, 20, 50, 0.15);
+      padding: 28px 28px 32px;
+      transition: all 0.2s;
+      margin: 16px 0;
+    }
+    h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: #0a1e3c;
+      margin-bottom: 2px;
+      line-height: 1.25;
+      text-transform: uppercase;
+    }
+    .subhead {
+      font-size: 0.95rem;
+      color: #4b5e7a;
+      border-left: 4px solid #2a6df4;
+      padding-left: 14px;
+      margin-bottom: 8px;
+      font-weight: 400;
+    }
+    .directive {
+      font-size: 0.85rem;
+      color: #5d7393;
+      margin-bottom: 24px;
+      padding-left: 18px;
+      font-style: italic;
+    }
+    .step {
+      background: #f0f4fe;
+      border-radius: 18px;
+      padding: 18px 20px;
+      margin-bottom: 18px;
+      border: 1px solid #d9e2f0;
+    }
+    .step-title {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      font-weight: 700;
+      color: #2a6df4;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .step-title span {
+      background: #2a6df4;
+      color: white;
+      border-radius: 40px;
+      width: 22px;
+      height: 22px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+    }
+    .radio-group {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .radio-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 500;
+      color: #0a1e3c;
+      cursor: pointer;
+    }
+    .radio-option input[type="radio"] {
+      width: 18px;
+      height: 18px;
+      accent-color: #2a6df4;
+      cursor: pointer;
+    }
+    .course-select, .id-input {
+      width: 100%;
+      padding: 14px 18px;
+      font-size: 1rem;
+      border: 1.5px solid #cfddee;
+      border-radius: 16px;
+      background: white;
+      transition: 0.15s;
+      outline: none;
+      font-weight: 500;
+      color: #0a1e3c;
+    }
+    .course-select:focus, .id-input:focus {
+      border-color: #2a6df4;
+      box-shadow: 0 0 0 4px rgba(42, 109, 244, 0.12);
+    }
+    .course-select:disabled, .id-input:disabled {
+      background: #f1f5fc;
+      color: #8a9bb5;
+      cursor: not-allowed;
+    }
+    .btn {
+      background: #2a6df4;
+      border: none;
+      border-radius: 40px;
+      padding: 16px 28px;
+      font-weight: 600;
+      font-size: 1.05rem;
+      color: white;
+      width: 100%;
+      cursor: pointer;
+      transition: 0.15s;
+      margin-top: 8px;
+      box-shadow: 0 8px 18px -6px rgba(42, 109, 244, 0.35);
+      letter-spacing: 0.3px;
+    }
+    .btn:hover:not(:disabled) {
+      background: #1a56e0;
+      transform: translateY(-1px);
+      box-shadow: 0 12px 22px -8px #2a6df4;
+    }
+    .btn:disabled {
+      background: #b7c9e6;
+      box-shadow: none;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .result-area {
+      margin-top: 28px;
+      background: #ffffff;
+      border-radius: 22px;
+      padding: 20px 22px;
+      border: 1px solid #e2e9f5;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.02);
+    }
+    .result-placeholder {
+      color: #778aa5;
+      text-align: center;
+      font-size: 0.95rem;
+      padding: 12px 0;
+      font-style: italic;
+    }
+    .venue-card {
+      background: linear-gradient(145deg, #f0f6ff, #ffffff);
+      border-radius: 18px;
+      padding: 20px 22px;
+      border-left: 8px solid #2a6df4;
+    }
+    .venue-card h2 {
+      font-size: 1.4rem;
+      color: #0a1e3c;
+      margin-bottom: 6px;
+      font-weight: 600;
+      line-height: 1.3;
+    }
+    .venue-card .exam-centre {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #2a6df4;
+      font-weight: 700;
+      margin-bottom: 12px;
+      border-bottom: 1px dashed #cbd9ec;
+      padding-bottom: 10px;
+    }
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px 20px;
+      margin-top: 14px;
+    }
+    .detail-item {
+      display: flex;
+      flex-direction: column;
+    }
+    .detail-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      font-weight: 700;
+      color: #5d7393;
+      margin-bottom: 2px;
+    }
+    .detail-value {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #0a1e3c;
+    }
+    .badge {
+      display: inline-block;
+      background: #e4edfe;
+      color: #1b4fbb;
+      border-radius: 40px;
+      padding: 6px 18px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-top: 12px;
+    }
+    .error-box {
+      background: #fff2f0;
+      border: 1px solid #ffc9c0;
+      color: #b02a1c;
+      border-radius: 16px;
+      padding: 16px 18px;
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+    .directions-box {
+      margin-top: 22px;
+      background: #f8faff;
+      border-radius: 18px;
+      padding: 20px 22px;
+      border: 1px solid #d9e2f0;
+    }
+    .directions-box h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #0a1e3c;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+    .directions-box h3 .emoji {
+      font-size: 1.2rem;
+    }
+    .directions-box .dir-item {
+      margin-bottom: 14px;
+    }
+    .directions-box .dir-item:last-child {
+      margin-bottom: 0;
+    }
+    .directions-box .dir-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      font-weight: 700;
+      color: #2a6df4;
+      margin-bottom: 3px;
+    }
+    .directions-box .dir-text {
+      font-size: 0.95rem;
+      color: #1e3350;
+      line-height: 1.5;
+    }
+    .directions-box .dir-text strong {
+      color: #0a1e3c;
+    }
+    .directions-box .maps-link {
+      display: inline-block;
+      margin-top: 8px;
+      background: #2a6df4;
+      color: white;
+      padding: 8px 18px;
+      border-radius: 40px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: 0.15s;
+    }
+    .directions-box .maps-link:hover {
+      background: #1a56e0;
+    }
+    .footer-note {
+      margin-top: 24px;
+      font-size: 0.75rem;
+      color: #8899b0;
+      text-align: center;
+      border-top: 1px solid #e2e9f5;
+      padding-top: 18px;
+    }
+    .footer-note strong {
+      color: #4b5e7a;
+    }
+    .advice-box {
+      margin-top: 22px;
+      background: #fffbeb;
+      border-radius: 18px;
+      padding: 18px 22px;
+      border: 1px solid #fde68a;
+    }
+    .advice-box h3 {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #92400e;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+    .advice-box ol {
+      margin-left: 18px;
+      font-size: 0.9rem;
+      color: #4b3a1a;
+      line-height: 1.6;
+    }
+    .advice-box ol li {
+      margin-bottom: 4px;
+    }
+    @media (max-width: 500px) {
+      .detail-grid {
+        grid-template-columns: 1fr;
+      }
+      h1 {
+        font-size: 1.3rem;
+      }
+      .card {
+        padding: 20px 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>EDWARD SAM – AFRICAN STUDIES EXAMINATION CAMPUS VENUE FINDER – 27TH NOVEMBER 2026</h1>
+    <div class="subhead">UGRC · Main & City Campus · 27th November 2026</div>
+    <div class="directive">Use these directions to locate your examination venue. Google Maps can take you to the general area, but ask for the specific laboratory when you arrive.</div>
+
+    <!-- Step 1: Campus -->
+    <div class="step">
+      <div class="step-title"><span>1</span> Select campus</div>
+      <div class="radio-group">
+        <label class="radio-option">
+          <input type="radio" name="campus" value="Main Campus" checked> Main Campus
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="campus" value="City Campus"> City Campus
+        </label>
+      </div>
+    </div>
+
+    <!-- Step 2: Course -->
+    <div class="step">
+      <div class="step-title"><span>2</span> Choose course</div>
+      <select id="courseSelect" class="course-select" disabled>
+        <option value="">— first select campus —</option>
+      </select>
+    </div>
+
+    <!-- Step 3: ID -->
+    <div class="step">
+      <div class="step-title"><span>3</span> Enter your student ID</div>
+      <input type="text" id="studentId" class="id-input" placeholder="e.g. 22451234" disabled autocomplete="off">
+    </div>
+
+    <button id="findBtn" class="btn" disabled>🔍 Find my venue</button>
+
+    <!-- Result -->
+    <div id="resultArea" class="result-area">
+      <div class="result-placeholder">Venue details will appear here</div>
+    </div>
+
+    <!-- Examination Advice (always visible) -->
+    <div class="advice-box">
+      <h3>📋 Important Examination Advice</h3>
+      <ol>
+        <li>Check your index number against the examination timetable to confirm your assigned venue.</li>
+        <li>Do not assume that everyone writing African Studies will use the same laboratory.</li>
+        <li>Confirm the specific room: Lab 1, Lab 2, Lab 3, Lab 4A, Lab 4B, Knowledge Commons or IAC Training Lab.</li>
+        <li>If you get to the general location and cannot identify the laboratory, ask campus security or an examination official for assistance.</li>
+        <li>Arrive early enough to locate your venue before the examination begins.</li>
+      </ol>
+    </div>
+
+    <div class="footer-note">
+      <strong>EDWARD SAM – THE CAMPUS EYE</strong><br>
+      We see. We investigate. We inform.
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      // --------------------------------------------------------------
+      // RAW DATA – all rows from the schedule
+      // --------------------------------------------------------------
+      const rawRows = [
+        // ---- UGRC220 ----
+        { examCentre: "UGITD/UGCS LAB CENTRE", hall: "UGITD Lab 3 - Main", campus: "City Campus", code: "UGRC220", title: "INTRODUCTION TO AFRICAN STUDIES/APPROTEC", indexRange: "11011083-22588048", time: "8:30", date: "27/11/2026" },
+        { examCentre: "UGITD/UGCS LAB CENTRE", hall: "UGITD Lab 4A", campus: "Main Campus", code: "UGRC220", title: "INTRODUCTION TO AFRICAN STUDIES/APPROTEC", indexRange: "10865632-22437695", time: "8:30", date: "27/11/2026" },
+        { examCentre: "UGITD/UGCS LAB CENTRE", hall: "UGITD Lab 4B", campus: "Main Campus", code: "UGRC220", title: "INTRODUCTION TO AFRICAN STUDIES/APPROTEC", indexRange: "22437848-22441306", time: "8:30", date: "27/11/2026" },
+        { examCentre: "BALME LAB CENTRE", hall: "Balme-Knowledge Commons", campus: "Main Campus", code: "UGRC220", title: "INTRODUCTION TO AFRICAN STUDIES/APPROTEC", indexRange: "22441340-22459289", time: "8:30", date: "27/11/2026" },
+        { examCentre: "BALME LAB CENTRE", hall: "Balme-IAC Training Lab", campus: "Main Campus", code: "UGRC220", title: "INTRODUCTION TO AFRICAN STUDIES/APPROTEC", indexRange: "22459309-22463427", time: "8:30", date: "27/11/2026" },
+        { examCentre: "UGBS LAB CENTER", hall: "UGBS LAB-Opposite PRESEC", campus: "Main Campus", code: "UGRC220", title: "INTRODUCTION TO AFRICAN STUDIES/APPROTEC", indexRange: "22463374-22473202", time: "8:30", date: "27/11/2026" },
+        { examCentre: "DEPT'T OF INFORMATION STUDIES LAB CENTRE", hall: "Dept. of Information Studies - Lab 1", campus: "Main Campus", code: "UGRC220", title: "INTRODUCTION TO AFRICAN STUDIES/APPROTEC", indexRange: "22473244-22475437", time: "8:30", date: "27/11/2026" },
+        { examCentre: "DEPT'T OF INFORMATION STUDIES LAB CENTRE", hall: "Dept. of Information Studies - Lab 2", campus: "Main Campus", code: "UGRC220", title: "INTRODUCTION TO AFRICAN STUDIES/APPROTEC", indexRange: "22475653-22478156", time: "8:30", date: "27/11/2026" },
+        { examCentre: "DEPT'T OF INFORMATION STUDIES LAB CENTRE", hall: "J. R. A ICT Centre Next to Kofi Dra Conf. Centre (Behind Psyc. Dept)", campus: "Main Campus", code: "UGRC220", title: "INTRODUCTION TO AFRICAN STUDIES/APPROTEC", indexRange: "22478262-22482866", time: "8:30", date: "27/11/2026" },
+        { examCentre: "COE/SCDE LAB CENTRE", hall: "CoE-SCDE Lab", campus: "Main Campus", code: "UGRC220", title: "INTRODUCTION TO AFRICAN STUDIES/APPROTEC", indexRange: "22483082-22486259", time: "8:30", date: "27/11/2026" },
+        { examCentre: "COE/SCDE LAB CENTRE", hall: "School of Communication Studies", campus: "Main Campus", code: "UGRC220", title: "INTRODUCTION TO AFRICAN STUDIES/APPROTEC", indexRange: "22486343-22489318", time: "8:30", date: "27/11/2026" },
+        { examCentre: "AKUAFO HALL LAB", hall: "Akuafo Hall Lab", campus: "Main Campus", code: "UGRC220", title: "INTRODUCTION TO AFRICAN STUDIES/APPROTEC", indexRange: "22489428-22591482", time: "8:30", date: "27/11/2026" },
+
+        // ---- UGRC221 ----
+        { examCentre: "UGITD/UGCS LAB CENTRE", hall: "UGITD Lab 3 - Main", campus: "Main Campus", code: "UGRC221", title: "INTRO. TO AFRICAN STUDIES: AFRICAN ART", indexRange: "10865690-22478968", time: "9:30", date: "27/11/2026" },
+        { examCentre: "UGITD/UGCS LAB CENTRE", hall: "UGITD Lab 4A", campus: "Main Campus", code: "UGRC221", title: "INTRO. TO AFRICAN STUDIES: AFRICAN ART", indexRange: "22479117-22495281", time: "9:30", date: "27/11/2026" },
+        { examCentre: "UGITD/UGCS LAB CENTRE", hall: "UGITD Lab 4B", campus: "City Campus", code: "UGRC221", title: "INTRO. TO AFRICAN STUDIES: AFRICAN ART", indexRange: "11013249-22587874", time: "9:30", date: "27/11/2026" },
+
+        // ---- UGRC223 ----
+        { examCentre: "BALME LAB CENTRE", hall: "Balme-Knowledge Commons", campus: "Main Campus", code: "UGRC223", title: "INTRO. TO AFRICAN STUD: AFRICA & THE DIASPORA", indexRange: "10732332-22452394", time: "9:30", date: "27/11/2026" },
+        { examCentre: "BALME LAB CENTRE", hall: "Balme-IAC Training Lab", campus: "Main Campus", code: "UGRC223", title: "INTRO. TO AFRICAN STUD: AFRICA & THE DIASPORA", indexRange: "22452779-22458666", time: "9:30", date: "27/11/2026" },
+        { examCentre: "UGBS LAB CENTER", hall: "UGBS LAB-Opposite PRESEC", campus: "Main Campus", code: "UGRC223", title: "INTRO. TO AFRICAN STUD: AFRICA & THE DIASPORA", indexRange: "22459320-22473901", time: "9:30", date: "27/11/2026" },
+        { examCentre: "DEPT'T OF INFORMATION STUDIES LAB CENTRE", hall: "Dept. of Information Studies - Lab 1", campus: "Main Campus", code: "UGRC223", title: "INTRO. TO AFRICAN STUD: AFRICA & THE DIASPORA", indexRange: "22474385-22477446", time: "9:30", date: "27/11/2026" },
+        { examCentre: "DEPT'T OF INFORMATION STUDIES LAB CENTRE", hall: "Dept. of Information Studies - Lab 2", campus: "Main Campus", code: "UGRC223", title: "INTRO. TO AFRICAN STUD: AFRICA & THE DIASPORA", indexRange: "22477796-22480786", time: "9:30", date: "27/11/2026" },
+        { examCentre: "DEPT'T OF INFORMATION STUDIES LAB CENTRE", hall: "J. R. A ICT Centre Next to Kofi Dra Conf. Centre (Behind Psyc. Dept)", campus: "Main Campus", code: "UGRC223", title: "INTRO. TO AFRICAN STUD: AFRICA & THE DIASPORA", indexRange: "22481414-22485033", time: "9:30", date: "27/11/2026" },
+        { examCentre: "COE/SCDE LAB CENTRE", hall: "CoE-SCDE Lab", campus: "Main Campus", code: "UGRC223", title: "INTRO. TO AFRICAN STUD: AFRICA & THE DIASPORA", indexRange: "22485159-22488957", time: "9:30", date: "27/11/2026" },
+        { examCentre: "COE/SCDE LAB CENTRE", hall: "School of Communication Studies", campus: "Main Campus", code: "UGRC223", title: "INTRO. TO AFRICAN STUD: AFRICA & THE DIASPORA", indexRange: "22489128-22493790", time: "9:30", date: "27/11/2026" },
+        { examCentre: "AKUAFO HALL LAB", hall: "Akuafo Hall Lab", campus: "Main Campus", code: "UGRC223", title: "INTRO. TO AFRICAN STUD: AFRICA & THE DIASPORA", indexRange: "22493820-22588487", time: "9:30", date: "27/11/2026" },
+
+        // ---- UGRC224 ----
+        { examCentre: "UGITD/UGCS LAB CENTRE", hall: "UGITD Lab 3 - Main", campus: "City Campus", code: "UGRC224", title: "INTRO. TO AFRICAN STUD: AFRICAN POPULAR CULT", indexRange: "", time: "10:30", date: "27/11/2026" },
+        { examCentre: "UGITD/UGCS LAB CENTRE", hall: "UGITD Lab 4A", campus: "City Campus", code: "UGRC223", title: "INTRO. TO AFRICAN STUD: AFRICA & THE DIASPORA", indexRange: "", time: "10:30", date: "27/11/2026" },
+        { examCentre: "UGITD/UGCS LAB CENTRE", hall: "UGITD Lab 4B", campus: "Main Campus", code: "UGRC224", title: "INTRO. TO AFRICAN STUD: AFRICAN POPULAR CULT", indexRange: "10466857-22437202", time: "10:30", date: "27/11/2026" },
+        { examCentre: "BALME LAB CENTRE", hall: "Balme-Knowledge Commons", campus: "Main Campus", code: "UGRC224", title: "INTRO. TO AFRICAN STUD: AFRICAN POPULAR CULT", indexRange: "22437260-22449854", time: "10:30", date: "27/11/2026" },
+        { examCentre: "BALME LAB CENTRE", hall: "Balme-IAC Training Lab", campus: "Main Campus", code: "UGRC224", title: "INTRO. TO AFRICAN STUD: AFRICAN POPULAR CULT", indexRange: "22449926-22452320", time: "10:30", date: "27/11/2026" },
+        { examCentre: "UGBS LAB CENTER", hall: "UGBS LAB-Opposite PRESEC", campus: "Main Campus", code: "UGRC224", title: "INTRO. TO AFRICAN STUD: AFRICAN POPULAR CULT", indexRange: "22452376-22459914", time: "10:30", date: "27/11/2026" },
+        { examCentre: "DEPT'T OF INFORMATION STUDIES LAB CENTRE", hall: "Dept. of Information Studies - Lab 1", campus: "Main Campus", code: "UGRC224", title: "INTRO. TO AFRICAN STUD: AFRICAN POPULAR CULT", indexRange: "22459962-22462226", time: "10:30", date: "27/11/2026" },
+        { examCentre: "DEPT'T OF INFORMATION STUDIES LAB CENTRE", hall: "Dept. of Information Studies - Lab 2", campus: "Main Campus", code: "UGRC224", title: "INTRO. TO AFRICAN STUD: AFRICAN POPULAR CULT", indexRange: "22462245-22463497", time: "10:30", date: "27/11/2026" },
+        { examCentre: "DEPT'T OF INFORMATION STUDIES LAB CENTRE", hall: "J. R. A ICT Centre Next to Kofi Dra Conf. Centre (Behind Psyc. Dept)", campus: "Main Campus", code: "UGRC224", title: "INTRO. TO AFRICAN STUD: AFRICAN POPULAR CULT", indexRange: "22463722-22466704", time: "10:30", date: "27/11/2026" },
+        { examCentre: "COE/SCDE LAB CENTRE", hall: "CoE-SCDE Lab", campus: "Main Campus", code: "UGRC224", title: "INTRO. TO AFRICAN STUD: AFRICAN POPULAR CULT", indexRange: "22467012-22469520", time: "10:30", date: "27/11/2026" },
+        { examCentre: "COE/SCDE LAB CENTRE", hall: "School of Communication Studies", campus: "Main Campus", code: "UGRC224", title: "INTRO. TO AFRICAN STUD: AFRICAN POPULAR CULT", indexRange: "22469623-22473161", time: "10:30", date: "27/11/2026" },
+        { examCentre: "AKUAFO HALL LAB", hall: "Akuafo Hall Lab", campus: "Main Campus", code: "UGRC224", title: "INTRO. TO AFRICAN STUD: AFRICAN POPULAR CULT", indexRange: "22473269-22476660", time: "10:30", date: "27/11/2026" },
+        { examCentre: "UGITD/UGCS LAB CENTRE", hall: "UGITD Lab 3 - Main", campus: "Main Campus", code: "UGRC224", title: "INTRO. TO AFRICAN STUD: AFRICAN POPULAR CULT", indexRange: "22476664-22490854", time: "11:30", date: "27/11/2026" },
+        { examCentre: "UGITD/UGCS LAB CENTRE", hall: "UGITD Lab 4A", campus: "Main Campus", code: "UGRC224", title: "INTRO. TO AFRICAN STUD: AFRICAN POPULAR CULT", indexRange: "22491125-22495438", time: "11:30", date: "27/11/2026" },
+        { examCentre: "UGITD/UGCS LAB CENTRE", hall: "UGITD Lab 4B", campus: "City Campus", code: "UGRC225", title: "INTRO. TO AFRICAN STUDIES: AFRICAN DANCE", indexRange: "", time: "11:30", date: "27/11/2026" },
+
+        // ---- UGRC227 ----
+        { examCentre: "BALME LAB CENTRE", hall: "Balme-Knowledge Commons", campus: "Main Campus", code: "UGRC227", title: "INTRO. TO AFRICAN STUDIES: AFRICA MUSIC", indexRange: "", time: "11:30", date: "27/11/2026" },
+        { examCentre: "BALME LAB CENTRE", hall: "Balme-Knowledge Commons", campus: "City Campus", code: "UGRC227", title: "INTRO. TO AFRICAN STUDIES: AFRICA MUSIC", indexRange: "", time: "11:30", date: "27/11/2026" },
+        { examCentre: "BALME LAB CENTRE", hall: "Balme-IAC Training Lab", campus: "Main Campus", code: "UGRC228", title: "INTRO. TO AFRICAN STUDIES: CHIEFTAINCY & DEV", indexRange: "10985265-22438658", time: "11:30", date: "27/11/2026" },
+        { examCentre: "UGBS LAB CENTER", hall: "UGBS LAB-Opposite PRESEC", campus: "Main Campus", code: "UGRC228", title: "INTRO. TO AFRICAN STUDIES: CHIEFTAINCY & DEV", indexRange: "22438722-22447177", time: "11:30", date: "27/11/2026" },
+        { examCentre: "DEPT'T OF INFORMATION STUDIES LAB CENTRE", hall: "Dept. of Information Studies - Lab 1", campus: "Main Campus", code: "UGRC228", title: "INTRO. TO AFRICAN STUDIES: CHIEFTAINCY & DEV", indexRange: "22447481-22449930", time: "11:30", date: "27/11/2026" },
+        { examCentre: "DEPT'T OF INFORMATION STUDIES LAB CENTRE", hall: "Dept. of Information Studies - Lab 2", campus: "Main Campus", code: "UGRC225", title: "INTRO. TO AFRICAN STUDIES: AFRICAN DANCE", indexRange: "", time: "11:30", date: "27/11/2026" },
+        { examCentre: "DEPT'T OF INFORMATION STUDIES LAB CENTRE", hall: "J. R. A ICT Centre Next to Kofi Dra Conf. Centre (Behind Psyc. Dept)", campus: "Main Campus", code: "UGRC228", title: "INTRO. TO AFRICAN STUDIES: CHIEFTAINCY & DEV", indexRange: "22450382-22453338", time: "11:30", date: "27/11/2026" },
+        { examCentre: "COE/SCDE LAB CENTRE", hall: "CoE-SCDE Lab", campus: "Main Campus", code: "UGRC228", title: "INTRO. TO AFRICAN STUDIES: CHIEFTAINCY & DEV", indexRange: "22453362-22455816", time: "11:30", date: "27/11/2026" },
+        { examCentre: "COE/SCDE LAB CENTRE", hall: "School of Communication Studies", campus: "Main Campus", code: "UGRC228", title: "INTRO. TO AFRICAN STUDIES: CHIEFTAINCY & DEV", indexRange: "22455851-22459052", time: "11:30", date: "27/11/2026" },
+        { examCentre: "AKUAFO HALL LAB", hall: "Akuafo Hall Lab", campus: "Main Campus", code: "UGRC228", title: "INTRO. TO AFRICAN STUDIES: CHIEFTAINCY & DEV", indexRange: "22459089-22462468", time: "11:30", date: "27/11/2026" },
+
+        // ---- UGRC228 (12:30) ----
+        { examCentre: "UGITD/UGCS LAB CENTRE", hall: "UGITD Lab 3 - Main", campus: "Main Campus", code: "UGRC228", title: "INTRO. TO AFRICAN STUDIES: CHIEFTAINCY & DEV", indexRange: "22462914-22476211", time: "12:30", date: "27/11/2026" },
+        { examCentre: "UGITD/UGCS LAB CENTRE", hall: "UGITD Lab 4A", campus: "Main Campus", code: "UGRC228", title: "INTRO. TO AFRICAN STUDIES: CHIEFTAINCY & DEV", indexRange: "22476244-22481639", time: "12:30", date: "27/11/2026" },
+        { examCentre: "UGITD/UGCS LAB CENTRE", hall: "UGITD Lab 4B", campus: "Main Campus", code: "UGRC228", title: "INTRO. TO AFRICAN STUDIES: CHIEFTAINCY & DEV", indexRange: "22481768-22486473", time: "12:30", date: "27/11/2026" },
+        { examCentre: "BALME LAB CENTRE", hall: "Balme-Knowledge Commons", campus: "Main Campus", code: "UGRC228", title: "INTRO. TO AFRICAN STUDIES: CHIEFTAINCY & DEV", indexRange: "22486746-22522322", time: "12:30", date: "27/11/2026" },
+        { examCentre: "BALME LAB CENTRE", hall: "Balme-Knowledge Commons", campus: "Main Campus", code: "UGRC229", title: "INTRO. TO AFRICAN STUD: CULTURE & DEVELOPMENT", indexRange: "10974812-22439093", time: "12:30", date: "27/11/2026" },
+        { examCentre: "BALME LAB CENTRE", hall: "Balme-IAC Training Lab", campus: "Main Campus", code: "UGRC229", title: "INTRO. TO AFRICAN STUD: CULTURE & DEVELOPMENT", indexRange: "22439113-22442615", time: "12:30", date: "27/11/2026" },
+        { examCentre: "UGBS LAB CENTER", hall: "UGBS LAB-Opposite PRESEC", campus: "Main Campus", code: "UGRC229", title: "INTRO. TO AFRICAN STUD: CULTURE & DEVELOPMENT", indexRange: "22442631-22449082", time: "12:30", date: "27/11/2026" },
+        { examCentre: "DEPT'T OF INFORMATION STUDIES LAB CENTRE", hall: "Dept. of Information Studies - Lab 1", campus: "Main Campus", code: "UGRC229", title: "INTRO. TO AFRICAN STUD: CULTURE & DEVELOPMENT", indexRange: "22449187-22451671", time: "12:30", date: "27/11/2026" },
+        { examCentre: "DEPT'T OF INFORMATION STUDIES LAB CENTRE", hall: "Dept. of Information Studies - Lab 2", campus: "Main Campus", code: "UGRC229", title: "INTRO. TO AFRICAN STUD: CULTURE & DEVELOPMENT", indexRange: "22451770-22453020", time: "12:30", date: "27/11/2026" },
+        { examCentre: "DEPT'T OF INFORMATION STUDIES LAB CENTRE", hall: "J. R. A ICT Centre Next to Kofi Dra Conf. Centre (Behind Psyc. Dept)", campus: "Main Campus", code: "UGRC229", title: "INTRO. TO AFRICAN STUD: CULTURE & DEVELOPMENT", indexRange: "22453275-22455502", time: "12:30", date: "27/11/2026" },
+        { examCentre: "COE/SCDE LAB CENTRE", hall: "CoE-SCDE Lab", campus: "Main Campus", code: "UGRC229", title: "INTRO. TO AFRICAN STUD: CULTURE & DEVELOPMENT", indexRange: "22455566-22457113", time: "12:30", date: "27/11/2026" },
+        { examCentre: "COE/SCDE LAB CENTRE", hall: "School of Communication Studies", campus: "Main Campus", code: "UGRC229", title: "INTRO. TO AFRICAN STUD: CULTURE & DEVELOPMENT", indexRange: "22457310-22460305", time: "12:30", date: "27/11/2026" },
+        { examCentre: "AKUAFO HALL LAB", hall: "Akuafo Hall Lab", campus: "Main Campus", code: "UGRC229", title: "INTRO. TO AFRICAN STUD: CULTURE & DEVELOPMENT", indexRange: "22460757-22463381", time: "12:30", date: "27/11/2026" },
+
+        // ---- UGRC229 (13:30) ----
+        { examCentre: "UGITD/UGCS LAB CENTRE", hall: "UGITD Lab 3 - Main", campus: "Main Campus", code: "UGRC229", title: "INTRO. TO AFRICAN STUD: CULTURE & DEVELOPMENT", indexRange: "22463390-22473650", time: "13:30", date: "27/11/2026" },
+        { examCentre: "UGITD/UGCS LAB CENTRE", hall: "UGITD Lab 4A", campus: "Main Campus", code: "UGRC229", title: "INTRO. TO AFRICAN STUD: CULTURE & DEVELOPMENT", indexRange: "22473845-22477173", time: "13:30", date: "27/11/2026" },
+        { examCentre: "UGITD/UGCS LAB CENTRE", hall: "UGITD Lab 4B", campus: "Main Campus", code: "UGRC229", title: "INTRO. TO AFRICAN STUD: CULTURE & DEVELOPMENT", indexRange: "22477307-22481013", time: "13:30", date: "27/11/2026" },
+        { examCentre: "BALME LAB CENTRE", hall: "Balme-Knowledge Commons", campus: "Main Campus", code: "UGRC229", title: "INTRO. TO AFRICAN STUD: CULTURE & DEVELOPMENT", indexRange: "22481102-22491473", time: "13:30", date: "27/11/2026" },
+        { examCentre: "BALME LAB CENTRE", hall: "Balme-IAC Training Lab", campus: "Main Campus", code: "UGRC229", title: "INTRO. TO AFRICAN STUD: CULTURE & DEVELOPMENT", indexRange: "22491478-22495289", time: "13:30", date: "27/11/2026" },
+        { examCentre: "UGBS LAB CENTER", hall: "UGBS LAB-Opposite PRESEC", campus: "City Campus", code: "UGRC229", title: "INTRO. TO AFRICAN STUD: CULTURE & DEVELOPMENT", indexRange: "22040422-22455487", time: "13:30", date: "27/11/2026" },
+        { examCentre: "DEPT'T OF INFORMATION STUDIES LAB CENTRE", hall: "Dept. of Information Studies - Lab 1", campus: "City Campus", code: "UGRC229", title: "INTRO. TO AFRICAN STUD: CULTURE & DEVELOPMENT", indexRange: "22455550-22461243", time: "13:30", date: "27/11/2026" },
+        { examCentre: "DEPT'T OF INFORMATION STUDIES LAB CENTRE", hall: "Dept. of Information Studies - Lab 2", campus: "City Campus", code: "UGRC229", title: "INTRO. TO AFRICAN STUD: CULTURE & DEVELOPMENT", indexRange: "22461294-22468186", time: "13:30", date: "27/11/2026" },
+        { examCentre: "DEPT'T OF INFORMATION STUDIES LAB CENTRE", hall: "J. R. A ICT Centre Next to Kofi Dra Conf. Centre (Behind Psyc. Dept)", campus: "City Campus", code: "UGRC229", title: "INTRO. TO AFRICAN STUD: CULTURE & DEVELOPMENT", indexRange: "22469325-22476440", time: "13:30", date: "27/11/2026" },
+        { examCentre: "COE/SCDE LAB CENTRE", hall: "CoE-SCDE Lab", campus: "City Campus", code: "UGRC229", title: "INTRO. TO AFRICAN STUD: CULTURE & DEVELOPMENT", indexRange: "22476852-22486210", time: "13:30", date: "27/11/2026" },
+        { examCentre: "COE/SCDE LAB CENTRE", hall: "School of Communication Studies", campus: "City Campus", code: "UGRC229", title: "INTRO. TO AFRICAN STUD: CULTURE & DEVELOPMENT", indexRange: "22486292-22492801", time: "13:30", date: "27/11/2026" },
+        { examCentre: "AKUAFO HALL LAB", hall: "Akuafo Hall Lab", campus: "City Campus", code: "UGRC229", title: "INTRO. TO AFRICAN STUD: CULTURE & DEVELOPMENT", indexRange: "22492830-22588088", time: "13:30", date: "27/11/2026" },
+        { examCentre: "AKUAFO HALL LAB", hall: "Akuafo Hall Lab", campus: "Main Campus", code: "UGRC232", title: "INTRO. TO AFRICAN STUD: ISSUES IN AFRICAN POP", indexRange: "", time: "13:30", date: "27/11/2026" },
+
+        // ---- UGRC234 / UGRC235 ----
+        { examCentre: "UGITD/UGCS LAB CENTRE", hall: "UGITD Lab 3 - Main", campus: "Main Campus", code: "UGRC234", title: "INTRO. TO AFRICAN STUD: PHILOSOPHY OF AFRICAN", indexRange: "10825331-22479033", time: "14:30", date: "27/11/2026" },
+        { examCentre: "UGITD/UGCS LAB CENTRE", hall: "UGITD Lab 4A", campus: "Main Campus", code: "UGRC234", title: "INTRO. TO AFRICAN STUD: PHILOSOPHY OF AFRICAN", indexRange: "22479289-22522271", time: "14:30", date: "27/11/2026" },
+        { examCentre: "UGITD/UGCS LAB CENTRE", hall: "UGITD Lab 4B", campus: "City Campus", code: "UGRC234", title: "INTRO. TO AFRICAN STUD: PHILOSOPHY OF AFRICAN", indexRange: "", time: "14:30", date: "27/11/2026" },
+        { examCentre: "UGITD/UGCS LAB CENTRE", hall: "UGITD Lab 4B", campus: "Main Campus", code: "UGRC235", title: "INTRO. TO AFRICAN STUDIES: DAGBANI", indexRange: "", time: "14:30", date: "27/11/2026" },
+
+        // ---- UGRC239 / UGRC233 ----
+        { examCentre: "BALME LAB CENTRE", hall: "Balme-Knowledge Commons", campus: "Main Campus", code: "UGRC239", title: "INTRO. TO AFRICAN STUDIES:SOC. FRAMEWORK OF D", indexRange: "10896961-22451254", time: "14:30", date: "27/11/2026" },
+        { examCentre: "BALME LAB CENTRE", hall: "Balme-IAC Training Lab", campus: "City Campus", code: "UGRC233", title: "INTRO. TO AFRICAN STUD: OUR AFRICAN HERITAG", indexRange: "", time: "14:30", date: "27/11/2026" },
+        { examCentre: "UGBS LAB CENTER", hall: "UGBS LAB-Opposite PRESEC", campus: "Main Campus", code: "UGRC239", title: "INTRO. TO AFRICAN STUDIES:SOC. FRAMEWORK OF D", indexRange: "22451505-22458475", time: "14:30", date: "27/11/2026" },
+        { examCentre: "DEPT'T OF INFORMATION STUDIES LAB CENTRE", hall: "Dept. of Information Studies - Lab 1", campus: "Main Campus", code: "UGRC239", title: "INTRO. TO AFRICAN STUDIES:SOC. FRAMEWORK OF D", indexRange: "22458659-22460497", time: "14:30", date: "27/11/2026" },
+        { examCentre: "DEPT'T OF INFORMATION STUDIES LAB CENTRE", hall: "Dept. of Information Studies - Lab 2", campus: "Main Campus", code: "UGRC239", title: "INTRO. TO AFRICAN STUDIES:SOC. FRAMEWORK OF D", indexRange: "22460505-22462982", time: "14:30", date: "27/11/2026" },
+        { examCentre: "DEPT'T OF INFORMATION STUDIES LAB CENTRE", hall: "J. R. A ICT Centre Next to Kofi Dra Conf. Centre (Behind Psyc. Dept)", campus: "City Campus", code: "UGRC232", title: "INTRO. TO AFRICAN STUD: ISSUES IN AFRICAN POP", indexRange: "", time: "14:30", date: "27/11/2026" },
+        { examCentre: "COE/SCDE LAB CENTRE", hall: "CoE-SCDE Lab", campus: "Main Campus", code: "UGRC233", title: "INTRO. TO AFRICAN STUD: OUR AFRICAN HERITAG", indexRange: "", time: "14:30", date: "27/11/2026" },
+        { examCentre: "COE/SCDE LAB CENTRE", hall: "School of Communication Studies", campus: "Main Campus", code: "UGRC239", title: "INTRO. TO AFRICAN STUDIES:SOC. FRAMEWORK OF D", indexRange: "22463036-22466555", time: "14:30", date: "27/11/2026" },
+        { examCentre: "AKUAFO HALL LAB", hall: "Akuafo Hall Lab", campus: "Main Campus", code: "UGRC239", title: "INTRO. TO AFRICAN STUDIES:SOC. FRAMEWORK OF D", indexRange: "22466577-22470156", time: "14:30", date: "27/11/2026" },
+
+        // ---- UGRC239 (15:30) ----
+        { examCentre: "UGITD/UGCS LAB CENTRE", hall: "UGITD Lab 3 - Main", campus: "Main Campus", code: "UGRC239", title: "INTRO. TO AFRICAN STUDIES:SOC. FRAMEWORK OF D", indexRange: "22470297-22485324", time: "15:30", date: "27/11/2026" },
+        { examCentre: "UGITD/UGCS LAB CENTRE", hall: "UGITD Lab 4A", campus: "Main Campus", code: "UGRC239", title: "INTRO. TO AFRICAN STUDIES:SOC. FRAMEWORK OF D", indexRange: "22485329-22489328", time: "15:30", date: "27/11/2026" },
+        { examCentre: "UGITD/UGCS LAB CENTRE", hall: "UGITD Lab 4B", campus: "Main Campus", code: "UGRC239", title: "INTRO. TO AFRICAN STUDIES:SOC. FRAMEWORK OF D", indexRange: "22489654-22493373", time: "15:30", date: "27/11/2026" },
+        { examCentre: "BALME LAB CENTRE", hall: "Balme-Knowledge Commons", campus: "Main Campus", code: "UGRC239", title: "INTRO. TO AFRICAN STUDIES:SOC. FRAMEWORK OF D", indexRange: "22493492-22495094", time: "15:30", date: "27/11/2026" },
+        { examCentre: "BALME LAB CENTRE", hall: "Balme-Knowledge Commons", campus: "City Campus", code: "UGRC239", title: "INTRO. TO AFRICAN STUDIES:SOC. FRAMEWORK OF D", indexRange: "22010586-22445741", time: "15:30", date: "27/11/2026" },
+        { examCentre: "BALME LAB CENTRE", hall: "Balme-IAC Training Lab", campus: "City Campus", code: "UGRC239", title: "INTRO. TO AFRICAN STUDIES:SOC. FRAMEWORK OF D", indexRange: "22445744-22449042", time: "15:30", date: "27/11/2026" },
+        { examCentre: "UGBS LAB CENTER", hall: "UGBS LAB-Opposite PRESEC", campus: "City Campus", code: "UGRC239", title: "INTRO. TO AFRICAN STUDIES:SOC. FRAMEWORK OF D", indexRange: "22449048-22457105", time: "15:30", date: "27/11/2026" },
+        { examCentre: "DEPT'T OF INFORMATION STUDIES LAB CENTRE", hall: "Dept. of Information Studies - Lab 1", campus: "City Campus", code: "UGRC239", title: "INTRO. TO AFRICAN STUDIES:SOC. FRAMEWORK OF D", indexRange: "22457184-22459742", time: "15:30", date: "27/11/2026" },
+        { examCentre: "DEPT'T OF INFORMATION STUDIES LAB CENTRE", hall: "Dept. of Information Studies - Lab 2", campus: "City Campus", code: "UGRC239", title: "INTRO. TO AFRICAN STUDIES:SOC. FRAMEWORK OF D", indexRange: "22459881-22462656", time: "15:30", date: "27/11/2026" },
+        { examCentre: "DEPT'T OF INFORMATION STUDIES LAB CENTRE", hall: "J. R. A ICT Centre Next to Kofi Dra Conf. Centre (Behind Psyc. Dept)", campus: "City Campus", code: "UGRC239", title: "INTRO. TO AFRICAN STUDIES:SOC. FRAMEWORK OF D", indexRange: "22462931-22465790", time: "15:30", date: "27/11/2026" },
+        { examCentre: "COE/SCDE LAB CENTRE", hall: "CoE-SCDE Lab", campus: "City Campus", code: "UGRC239", title: "INTRO. TO AFRICAN STUDIES:SOC. FRAMEWORK OF D", indexRange: "22466006-22468092", time: "15:30", date: "27/11/2026" },
+        { examCentre: "COE/SCDE LAB CENTRE", hall: "School of Communication Studies", campus: "City Campus", code: "UGRC239", title: "INTRO. TO AFRICAN STUDIES:SOC. FRAMEWORK OF D", indexRange: "22468158-22470608", time: "15:30", date: "27/11/2026" },
+        { examCentre: "AKUAFO HALL LAB", hall: "Akuafo Hall Lab", campus: "City Campus", code: "UGRC239", title: "INTRO. TO AFRICAN STUDIES:SOC. FRAMEWORK OF D", indexRange: "22470671-22475308", time: "15:30", date: "27/11/2026" },
+
+        // ---- UGRC239 (16:30) ----
+        { examCentre: "UGITD/UGCS LAB CENTRE", hall: "UGITD Lab 3 - Main", campus: "City Campus", code: "UGRC239", title: "INTRO. TO AFRICAN STUDIES:SOC. FRAMEWORK OF D", indexRange: "22475615-22486331", time: "16:30", date: "27/11/2026" },
+        { examCentre: "UGITD/UGCS LAB CENTRE", hall: "UGITD Lab 4A", campus: "City Campus", code: "UGRC239", title: "INTRO. TO AFRICAN STUDIES:SOC. FRAMEWORK OF D", indexRange: "22486434-22490611", time: "16:30", date: "27/11/2026" },
+        { examCentre: "UGITD/UGCS LAB CENTRE", hall: "UGITD Lab 4B", campus: "City Campus", code: "UGRC239", title: "INTRO. TO AFRICAN STUDIES:SOC. FRAMEWORK OF D", indexRange: "22490656-22588101", time: "16:30", date: "27/11/2026" },
+        { examCentre: "BALME LAB CENTRE", hall: "Balme-Knowledge Commons", campus: "Main Campus", code: "UGRC237", title: "INTRO. TO AFRICAN STUDIES: GA", indexRange: "", time: "16:30", date: "27/11/2026" },
+        { examCentre: "BALME LAB CENTRE", hall: "Balme-Knowledge Commons", campus: "Main Campus", code: "UGRC238", title: "INTRO. TO AFRICAN STUDIES: TWI", indexRange: "22393102-22439484", time: "16:30", date: "27/11/2026" },
+        { examCentre: "BALME LAB CENTRE", hall: "Balme-IAC Training Lab", campus: "Main Campus", code: "UGRC238", title: "INTRO. TO AFRICAN STUDIES: TWI", indexRange: "22440020-22455645", time: "16:30", date: "27/11/2026" },
+        { examCentre: "UGBS LAB CENTER", hall: "UGBS LAB-Opposite PRESEC", campus: "Main Campus", code: "UGRC238", title: "INTRO. TO AFRICAN STUDIES: TWI", indexRange: "22456633-22486281", time: "16:30", date: "27/11/2026" },
+        { examCentre: "DEPT'T OF INFORMATION STUDIES LAB CENTRE", hall: "Dept. of Information Studies - Lab 1", campus: "Main Campus", code: "UGRC238", title: "INTRO. TO AFRICAN STUDIES: TWI", indexRange: "22486514-22585656", time: "16:30", date: "27/11/2026" },
+        { examCentre: "DEPT'T OF INFORMATION STUDIES LAB CENTRE", hall: "Dept. of Information Studies - Lab 2", campus: "Main Campus", code: "UGRC231", title: "INTRO. TO AFRICAN STUD: GENDER & DEVELOPMENT", indexRange: "10660463-22373532", time: "16:30", date: "27/11/2026" },
+        { examCentre: "DEPT'T OF INFORMATION STUDIES LAB CENTRE", hall: "J. R. A ICT Centre Next to Kofi Dra Conf. Centre (Behind Psyc. Dept)", campus: "Main Campus", code: "UGRC231", title: "INTRO. TO AFRICAN STUD: GENDER & DEVELOPMENT", indexRange: "22378228-22440128", time: "16:30", date: "27/11/2026" },
+        { examCentre: "COE/SCDE LAB CENTRE", hall: "CoE-SCDE Lab", campus: "Main Campus", code: "UGRC231", title: "INTRO. TO AFRICAN STUD: GENDER & DEVELOPMENT", indexRange: "22440169-22442177", time: "16:30", date: "27/11/2026" },
+        { examCentre: "COE/SCDE LAB CENTRE", hall: "School of Communication Studies", campus: "Main Campus", code: "UGRC231", title: "INTRO. TO AFRICAN STUD: GENDER & DEVELOPMENT", indexRange: "22442193-22444376", time: "16:30", date: "27/11/2026" },
+        { examCentre: "AKUAFO HALL LAB", hall: "Akuafo Hall Lab", campus: "Main Campus", code: "UGRC231", title: "INTRO. TO AFRICAN STUD: GENDER & DEVELOPMENT", indexRange: "22444431-22447918", time: "16:30", date: "27/11/2026" },
+
+        // ---- UGRC231 / UGRC236 (17:30) ----
+        { examCentre: "UGITD/UGCS LAB CENTRE", hall: "UGITD Lab 3 - Main", campus: "Main Campus", code: "UGRC231", title: "INTRO. TO AFRICAN STUD: GENDER & DEVELOPMENT", indexRange: "22448294-22465025", time: "17:30", date: "27/11/2026" },
+        { examCentre: "UGITD/UGCS LAB CENTRE", hall: "UGITD Lab 4A", campus: "Main Campus", code: "UGRC236", title: "INTRO. TO AFRICAN STUD:EWE", indexRange: "", time: "17:30", date: "27/11/2026" },
+        { examCentre: "UGITD/UGCS LAB CENTRE", hall: "UGITD Lab 4B", campus: "Main Campus", code: "UGRC231", title: "INTRO. TO AFRICAN STUD: GENDER & DEVELOPMENT", indexRange: "22465029-22469687", time: "17:30", date: "27/11/2026" },
+        { examCentre: "BALME LAB CENTRE", hall: "Balme-Knowledge Commons", campus: "Main Campus", code: "UGRC231", title: "INTRO. TO AFRICAN STUD: GENDER & DEVELOPMENT", indexRange: "22469880-22481958", time: "17:30", date: "27/11/2026" },
+        { examCentre: "BALME LAB CENTRE", hall: "Balme-IAC Training Lab", campus: "Main Campus", code: "UGRC231", title: "INTRO. TO AFRICAN STUD: GENDER & DEVELOPMENT", indexRange: "22482003-22485810", time: "17:30", date: "27/11/2026" },
+        { examCentre: "UGBS LAB CENTER", hall: "UGBS LAB-Opposite PRESEC", campus: "Main Campus", code: "UGRC231", title: "INTRO. TO AFRICAN STUD: GENDER & DEVELOPMENT", indexRange: "22486004-22521080", time: "17:30", date: "27/11/2026" },
+        { examCentre: "DEPT'T OF INFORMATION STUDIES LAB CENTRE", hall: "Dept. of Information Studies - Lab 1", campus: "Main Campus", code: "UGRC230", title: "INTRO. TO AFRICAN STUDIES: GENDER AND CULTURE", indexRange: "10743649-22246280", time: "17:30", date: "27/11/2026" },
+        { examCentre: "DEPT'T OF INFORMATION STUDIES LAB CENTRE", hall: "Dept. of Information Studies - Lab 2", campus: "Main Campus", code: "UGRC230", title: "INTRO. TO AFRICAN STUDIES: GENDER AND CULTURE", indexRange: "22263665-22436521", time: "17:30", date: "27/11/2026" },
+        { examCentre: "DEPT'T OF INFORMATION STUDIES LAB CENTRE", hall: "J. R. A ICT Centre Next to Kofi Dra Conf. Centre (Behind Psyc. Dept)", campus: "Main Campus", code: "UGRC230", title: "INTRO. TO AFRICAN STUDIES: GENDER AND CULTURE", indexRange: "22436928-22440487", time: "17:30", date: "27/11/2026" },
+        { examCentre: "COE/SCDE LAB CENTRE", hall: "CoE-SCDE Lab", campus: "Main Campus", code: "UGRC230", title: "INTRO. TO AFRICAN STUDIES: GENDER AND CULTURE", indexRange: "22440576-22442310", time: "17:30", date: "27/11/2026" },
+        { examCentre: "COE/SCDE LAB CENTRE", hall: "School of Communication Studies", campus: "Main Campus", code: "UGRC230", title: "INTRO. TO AFRICAN STUDIES: GENDER AND CULTURE", indexRange: "22442845-22446503", time: "17:30", date: "27/11/2026" },
+        { examCentre: "AKUAFO HALL LAB", hall: "Akuafo Hall Lab", campus: "Main Campus", code: "UGRC230", title: "INTRO. TO AFRICAN STUDIES: GENDER AND CULTURE", indexRange: "22446606-22449367", time: "17:30", date: "27/11/2026" },
+
+        // ---- UGRC230 (18:30) ----
+        { examCentre: "UGITD/UGCS LAB CENTRE", hall: "UGITD Lab 3 - Main", campus: "Main Campus", code: "UGRC230", title: "INTRO. TO AFRICAN STUDIES: GENDER AND CULTURE", indexRange: "22449542-22465350", time: "18:30", date: "27/11/2026" },
+        { examCentre: "UGITD/UGCS LAB CENTRE", hall: "UGITD Lab 4A", campus: "Main Campus", code: "UGRC230", title: "INTRO. TO AFRICAN STUDIES: GENDER AND CULTURE", indexRange: "22465379-22469263", time: "18:30", date: "27/11/2026" },
+        { examCentre: "UGITD/UGCS LAB CENTRE", hall: "UGITD Lab 4B", campus: "Main Campus", code: "UGRC230", title: "INTRO. TO AFRICAN STUDIES: GENDER AND CULTURE", indexRange: "22469357-22475209", time: "18:30", date: "27/11/2026" },
+        { examCentre: "BALME LAB CENTRE", hall: "Balme-Knowledge Commons", campus: "Main Campus", code: "UGRC230", title: "INTRO. TO AFRICAN STUDIES: GENDER AND CULTURE", indexRange: "22475314-22491570", time: "18:30", date: "27/11/2026" },
+        { examCentre: "BALME LAB CENTRE", hall: "Balme-IAC Training Lab", campus: "Main Campus", code: "UGRC230", title: "INTRO. TO AFRICAN STUDIES: GENDER AND CULTURE", indexRange: "22491689-22495322", time: "18:30", date: "27/11/2026" }
+      ];
+
+      // Additional row for UGRC111
+      rawRows.push({
+        examCentre: "UGITD/UGCS LAB CENTRE",
+        hall: "UGITD Lab 3 - Main",
+        campus: "City Campus",
+        code: "UGRC111",
+        title: "ICT FOR THE VISUALLY IMPAIRED I",
+        indexRange: "",
+        time: "10:30",
+        date: "27/11/2026"
+      });
+
+      // --------------------------------------------------------------
+      // Directions database keyed by examCentre
+      // --------------------------------------------------------------
+      const directionsDB = {
+        "UGITD/UGCS LAB CENTRE": {
+          rooms: "UGITD Lab 3 – Main, UGITD Lab 4A and UGITD Lab 4B.",
+          location: "University of Ghana Computing Systems (UGCS) / IT Directorate area.",
+          howToFind: "Locate Balme Library. The UGCS area is on the left side of Balme Library, behind the Department of Economics Conference Facility. Ask for the UGITD/UGCS Lab Centre.",
+          mapsLink: "https://www.google.com/maps/search/?api=1&query=University+of+Ghana+Computing+Systems+UGCS+Legon"
+        },
+        "BALME LAB CENTRE": {
+          rooms: "Balme – Knowledge Commons and Balme – IAC Training Lab.",
+          location: "Inside Balme Library.",
+          howToFind: "Locate Balme Library around University Square and its ornamental fountain. Enter the library and ask for Knowledge Commons or the IAC Training Lab. The IAC is in the West Wing.",
+          important: "Knowledge Commons and IAC Training Lab are separate examination rooms.",
+          mapsLink: "https://www.google.com/maps/search/?api=1&query=Balme+Library+University+of+Ghana"
+        },
+        "UGBS LAB CENTER": {
+          rooms: "UGBS Lab – Opposite PRESEC.",
+          location: "UGBS Graduate Building, PRESEC Junction.",
+          howToFind: "Head towards PRESEC Junction on the Legon–Madina Highway. Look for the UGBS Graduate Building, opposite the Goil Filling Station and near PRESEC.",
+          important: "This is NOT the main UGBS campus near Volta Hall. It is the separate UGBS Graduate Building at PRESEC Junction.",
+          mapsLink: "https://www.google.com/maps/search/?api=1&query=UGBS+Graduate+Building+PRESEC+Junction+Legon"
+        },
+        "DEPT'T OF INFORMATION STUDIES LAB CENTRE": {
+          rooms: "Department of Information Studies – Lab 1 and Lab 2.",
+          location: "Department of Information Studies, University of Ghana.",
+          howToFind: "Navigate to the Department of Information Studies. It is in the same general campus area as the Psychology and Political Science departments. When you arrive, ask for Lab 1 or Lab 2.",
+          important: "Do not confuse these laboratories with the UGCS Lab Centre.",
+          mapsLink: "https://www.google.com/maps/search/?api=1&query=Department+of+Information+Studies+University+of+Ghana"
+        },
+        "COE/SCDE LAB CENTRE": {
+          rooms: "CoE-SCDE Lab and School of Communication Studies.",
+          location: "College of Education area, close to the University of Ghana Main Gate.",
+          howToFind: "As you enter the Main Gate from outside, look to your right-hand side. The College of Education is in that area. Ask for the CoE-SCDE Computer Lab.",
+          important: "The School of Communication Studies is a separate venue from the CoE-SCDE Lab.",
+          mapsLink: "https://www.google.com/maps/search/?api=1&query=College+of+Education+University+of+Ghana+Legon"
+        },
+        "AKUAFO HALL LAB": {
+          rooms: "Akuafo Hall Lab.",
+          location: "Inside Akuafo Hall, University of Ghana.",
+          howToFind: "Navigate to Akuafo Hall along J.B. Danquah Avenue. Once inside the hall, ask for the computer laboratory.",
+          mapsLink: "https://www.google.com/maps/search/?api=1&query=Akuafo+Hall+University+of+Ghana"
+        }
+      };
+
+      // J.R.A ICT Centre is listed under DEPT'T OF INFORMATION STUDIES LAB CENTRE in the data,
+      // but has its own distinct directions. We handle it by hall name.
+      const jraDirections = {
+        rooms: "J.R.A ICT Centre.",
+        location: "Next to Kofi Drah Conference Centre, behind the Psychology Department.",
+        howToFind: "Locate Kofi Drah Conference Centre and look for the J.R.A ICT Centre beside it. You can also ask for the Psychology Department as a reference point.",
+        mapsLink: "https://www.google.com/maps/search/?api=1&query=Kofi+Drah+Conference+Centre+University+of+Ghana"
+      };
+
+      // School of Communication Studies has its own entry when hall matches
+      const socDirections = {
+        rooms: "School of Communication Studies.",
+        location: "University of Ghana, near the Main Gate side of campus.",
+        howToFind: "Navigate to the School of Communication Studies and ask for the examination computer laboratory.",
+        important: "This is a separate venue from the CoE-SCDE Lab.",
+        mapsLink: "https://www.google.com/maps/search/?api=1&query=School+of+Communication+Studies+University+of+Ghana"
+      };
+
+      // --------------------------------------------------------------
+      // Helpers: format time and date
+      // --------------------------------------------------------------
+      function formatTime(timeStr) {
+        if (!timeStr) return '';
+        let clean = timeStr.trim().replace(/:00$/, '');
+        if (/am|pm/i.test(clean)) {
+          clean = clean.replace(/\s*(am|pm)/i, '').trim();
+        }
+        const parts = clean.split(':');
+        if (parts.length < 2) return timeStr;
+        let hour = parseInt(parts[0], 10);
+        let minute = parts[1] || '00';
+        if (isNaN(hour)) return timeStr;
+        const ampm = hour >= 12 ? 'PM' : 'AM';
+        let hour12 = hour % 12;
+        if (hour12 === 0) hour12 = 12;
+        minute = minute.padStart(2, '0');
+        return `${hour12}:${minute} ${ampm}`;
+      }
+
+      function formatDate(dateStr) {
+        if (!dateStr) return '';
+        const parts = dateStr.split('/');
+        if (parts.length !== 3) return dateStr;
+        const day = parseInt(parts[0], 10);
+        const month = parseInt(parts[1], 10);
+        const year = parts[2];
+        if (isNaN(day) || isNaN(month)) return dateStr;
+        const monthNames = [
+          'January', 'February', 'March', 'April', 'May', 'June',
+          'July', 'August', 'September', 'October', 'November', 'December'
+        ];
+        const monthName = monthNames[month - 1] || '';
+        let suffix = 'th';
+        if (day === 1 || day === 21 || day === 31) suffix = 'st';
+        else if (day === 2 || day === 22) suffix = 'nd';
+        else if (day === 3 || day === 23) suffix = 'rd';
+        return `${day}${suffix} ${monthName} ${year}`;
+      }
+
+      // --------------------------------------------------------------
+      // DOM references
+      // --------------------------------------------------------------
+      const campusRadios = document.querySelectorAll('input[name="campus"]');
+      const courseSelect = document.getElementById('courseSelect');
+      const studentIdInput = document.getElementById('studentId');
+      const findBtn = document.getElementById('findBtn');
+      const resultArea = document.getElementById('resultArea');
+
+      let currentCampus = 'Main Campus';
+
+      function getCoursesForCampus(campus) {
+        const coursesMap = new Map();
+        rawRows.forEach(row => {
+          if (row.campus === campus && row.code) {
+            if (!coursesMap.has(row.code)) {
+              coursesMap.set(row.code, row.title);
+            }
+          }
+        });
+        return Array.from(coursesMap.entries())
+          .map(([code, title]) => ({ code, title }))
+          .sort((a, b) => a.code.localeCompare(b.code));
+      }
+
+      function populateCourses(campus) {
+        const courses = getCoursesForCampus(campus);
+        courseSelect.innerHTML = '';
+
+        if (courses.length === 0) {
+          courseSelect.innerHTML = '<option value="">No courses available</option>';
+          courseSelect.disabled = true;
+          return;
+        }
+
+        const placeholder = document.createElement('option');
+        placeholder.value = '';
+        placeholder.textContent = '— select a course —';
+        courseSelect.appendChild(placeholder);
+
+        courses.forEach(c => {
+          const opt = document.createElement('option');
+          opt.value = c.code;
+          opt.textContent = `${c.code} — ${c.title}`;
+          courseSelect.appendChild(opt);
+        });
+
+        courseSelect.disabled = false;
+        studentIdInput.value = '';
+        studentIdInput.disabled = true;
+        findBtn.disabled = true;
+      }
+
+      function handleCampusChange() {
+        const selected = document.querySelector('input[name="campus"]:checked');
+        if (!selected) return;
+        currentCampus = selected.value;
+        populateCourses(currentCampus);
+        resultArea.innerHTML = '<div class="result-placeholder">Venue details will appear here</div>';
+        studentIdInput.value = '';
+        studentIdInput.disabled = true;
+        findBtn.disabled = true;
+      }
+
+      courseSelect.addEventListener('change', function() {
+        const hasCourse = courseSelect.value !== '';
+        studentIdInput.disabled = !hasCourse;
+        if (hasCourse) {
+          studentIdInput.focus();
+        } else {
+          studentIdInput.value = '';
+        }
+        findBtn.disabled = !hasCourse || studentIdInput.value.trim() === '';
+      });
+
+      studentIdInput.addEventListener('input', function() {
+        findBtn.disabled = !(courseSelect.value && studentIdInput.value.trim().length > 0);
+      });
+
+      function parseRange(rangeStr) {
+        if (!rangeStr || rangeStr.trim() === '') return null;
+        const parts = rangeStr.split('-');
+        if (parts.length !== 2) return null;
+        const start = Number(parts[0].trim());
+        const end = Number(parts[1].trim());
+        if (isNaN(start) || isNaN(end)) return null;
+        return [start, end];
+      }
+
+      function findVenue() {
+        const campus = currentCampus;
+        const courseCode = courseSelect.value;
+        const rawId = studentIdInput.value.trim();
+
+        if (!courseCode) {
+          showError('Please select a course.');
+          return;
+        }
+        if (!rawId) {
+          showError('Please enter your student ID.');
+          return;
+        }
+
+        const idNumber = Number(rawId);
+        if (isNaN(idNumber) || !Number.isInteger(idNumber)) {
+          showError('Student ID must be a valid number (e.g. 22451234).');
+          return;
+        }
+
+        const matchingRows = rawRows.filter(
+          row => row.campus === campus && row.code === courseCode
+        );
+
+        if (matchingRows.length === 0) {
+          showError(`No exam schedule found for ${courseCode} on ${campus}.`);
+          return;
+        }
+
+        let foundRow = null;
+        for (const row of matchingRows) {
+          const range = parseRange(row.indexRange);
+          if (!range) continue;
+          const [start, end] = range;
+          if (idNumber >= start && idNumber <= end) {
+            foundRow = row;
+            break;
+          }
+        }
+
+        if (!foundRow) {
+          const hasEmptyRangeRow = matchingRows.some(row => !row.indexRange || row.indexRange.trim() === '');
+          if (hasEmptyRangeRow) {
+            const emptyRow = matchingRows.find(row => !row.indexRange || row.indexRange.trim() === '');
+            if (emptyRow) {
+              displayVenue(emptyRow, false, 'Your ID range is not listed for this course. Venue shown is the main hall for this course.');
+              return;
+            }
+          }
+          showError(`Your ID (${rawId}) does not fall within any index range for ${courseCode} on ${campus}.`);
+          return;
+        }
+
+        displayVenue(foundRow, true, null);
+      }
+
+      // --------------------------------------------------------------
+      // Display functions
+      // --------------------------------------------------------------
+      function displayVenue(row, idMatched, warningMessage) {
+        const range = parseRange(row.indexRange);
+        const rangeDisplay = range ? `${range[0]} – ${range[1]}` : 'Not specified';
+        const formattedTime = formatTime(row.time);
+        const formattedDate = formatDate(row.date);
+
+        let warningHtml = '';
+        if (warningMessage) {
+          warningHtml = `<div style="background:#fff4e5; border-left:4px solid #e68a00; padding:10px 14px; border-radius:12px; margin-top:14px; font-size:0.9rem; color:#7a4b00;">⚠️ ${warningMessage}</div>`;
+        }
+
+        // Build directions section
+        let directionsHtml = '';
+        const centre = row.examCentre;
+        const hall = row.hall;
+
+        // Determine which directions to use
+        let dir = null;
+        // Special case: J.R.A ICT Centre is a hall name under the Dept of Info Studies centre
+        if (hall && hall.includes('J. R. A')) {
+          dir = jraDirections;
+        } else if (hall && hall.includes('School of Communication Studies')) {
+          dir = socDirections;
+        } else if (directionsDB[centre]) {
+          dir = directionsDB[centre];
+        }
+
+        if (dir) {
+          directionsHtml = `
+            <div class="directions-box">
+              <h3><span class="emoji">📍</span> How to find this venue</h3>
+              <div class="dir-item">
+                <div class="dir-label">Examination rooms</div>
+                <div class="dir-text">${escapeHtml(dir.rooms)}</div>
+              </div>
+              <div class="dir-item">
+                <div class="dir-label">Location</div>
+                <div class="dir-text">${escapeHtml(dir.location)}</div>
+              </div>
+              <div class="dir-item">
+                <div class="dir-label">How to find it</div>
+                <div class="dir-text">${escapeHtml(dir.howToFind)}</div>
+              </div>
+              ${dir.important ? `
+              <div class="dir-item">
+                <div class="dir-label">⚠️ Important</div>
+                <div class="dir-text" style="color:#b02a1c; font-weight:500;">${escapeHtml(dir.important)}</div>
+              </div>` : ''}
+              <a class="maps-link" href="${dir.mapsLink}" target="_blank" rel="noopener">🗺️ Open in Google Maps</a>
+            </div>
+          `;
+        }
+
+        resultArea.innerHTML = `
+          <div class="venue-card">
+            <div class="exam-centre">${escapeHtml(row.examCentre)}</div>
+            <h2>${escapeHtml(row.hall)}</h2>
+            <div class="detail-grid">
+              <div class="detail-item">
+                <span class="detail-label">Course</span>
+                <span class="detail-value">${escapeHtml(row.code)}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Campus</span>
+                <span class="detail-value">${escapeHtml(row.campus)}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Time</span>
+                <span class="detail-value">${escapeHtml(formattedTime)}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Date</span>
+                <span class="detail-value">${escapeHtml(formattedDate)}</span>
+              </div>
+            </div>
+            <div style="margin-top:16px; border-top:1px dashed #cbd9ec; padding-top:14px;">
+              <div class="detail-item">
+                <span class="detail-label">Index range (your ID falls here)</span>
+                <span class="detail-value" style="font-family:monospace; font-size:1.2rem;">${escapeHtml(rangeDisplay)}</span>
+              </div>
+            </div>
+            <div class="badge">✅ Venue confirmed for your ID</div>
+            ${warningHtml}
+          </div>
+          ${directionsHtml}
+        `;
+      }
+
+      function showError(message) {
+        resultArea.innerHTML = `<div class="error-box">❌ ${escapeHtml(message)}</div>`;
+      }
+
+      function escapeHtml(text) {
+        if (!text) return '';
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+      }
+
+      campusRadios.forEach(radio => {
+        radio.addEventListener('change', handleCampusChange);
+      });
+
+      findBtn.addEventListener('click', findVenue);
+
+      studentIdInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          if (!findBtn.disabled) {
+            findVenue();
+          }
+        }
+      });
+
+      (function init() {
+        currentCampus = 'Main Campus';
+        populateCourses(currentCampus);
+      })();
+
+    })();
+  </script>
+</body>
+</html>
